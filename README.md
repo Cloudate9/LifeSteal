@@ -1,6 +1,3 @@
-# Hearts SMP
-Hearts SMP plugin!
+# LifeSteal
 
-This plugin is under the MIT license. This means in a nutshell tht I still hold copyright, but you can do whatever you want with the plugin and it's source code.
-
-Copyright Awesomemoder316 2021
+A private recreation of a the LifeSteal SMP. Absolutely no support will be given for this project.

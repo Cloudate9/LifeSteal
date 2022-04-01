@@ -1,6 +1,6 @@
-package io.github.awesomemoder316.heartssmp.commands
+package io.github.cloudate9.lifesteal.commands
 
-import io.github.awesomemoder316.heartssmp.HeartsSmp
+import io.github.cloudate9.lifesteal.LifeSteal
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
@@ -25,10 +25,10 @@ class Withdraw: CommandExecutor {
             return true
         }
 
-        if (sender.hasPermission("heartssmp.withdraw")) {
+        if (sender.hasPermission("lifesteal.withdraw")) {
 
-            val heartsToWithdraw = 1
-            if (sender.health <= 2) {
+            val heartsToWithdraw = if (args.isEmpty()) 1 else args[0].toInt()
+            if (sender.health <= heartsToWithdraw) {
 
                 // -2 cause ensure player always has 1 heart. heartsToWithdraw * 2 because we check health points, not hearts.
                 sender.sendMessage(
@@ -45,8 +45,8 @@ class Withdraw: CommandExecutor {
 
             for (number in 1..heartsToWithdraw) {
 
-                if (hasAvaliableSlot(sender)) sender.inventory.addItem(HeartsSmp.heartItemModel)
-                else sender.world.dropItemNaturally(sender.location, HeartsSmp.heartItemModel)
+                if (hasAvaliableSlot(sender)) sender.inventory.addItem(LifeSteal.heartItemModel)
+                else sender.world.dropItemNaturally(sender.location, LifeSteal.heartItemModel)
 
             }
 
@@ -58,7 +58,7 @@ class Withdraw: CommandExecutor {
             return true
         }
         sender.sendMessage(
-            Component.text("Incorrect usage: command is /heartssmp withdraw (number of hearts)")
+            Component.text("Incorrect usage: command is /lifesteal withdraw (number of hearts)")
                 .color(TextColor.color(Integer.parseInt("FF5555", 16))))
 
         return true
@@ -66,7 +66,7 @@ class Withdraw: CommandExecutor {
     }
 
     private fun hasAvaliableSlot(player: Player): Boolean {
-        for ((index, item) in player.inventory.contents.withIndex()) {
+        for ((index, item) in player.inventory.contents!!.withIndex()) {
             if (index > 35) return false
             if (item == null || item.type == Material.AIR) {
                 return true
