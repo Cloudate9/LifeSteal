@@ -7,16 +7,18 @@ plugins {
 }
 
 group = "io.github.cloudate9.lifesteal"
-version = "1.3.1"
+version = "1.4.0"
 
 repositories {
     maven("https://nexus.sirblobman.xyz/repository/public/")
+    maven("https://repo.mattstudios.me/artifactory/public/")
     mavenCentral()
     papermc()
 }
 
 dependencies {
     compileOnly("com.github.sirblobman.combatlogx:api:11.0.0.0-SNAPSHOT")
+    implementation("dev.triumphteam:triumph-gui:3.1.2")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 }
 
@@ -31,7 +33,8 @@ tasks {
 
     shadowJar {
         archiveFileName.set(rootProject.name + "-" + rootProject.version + ".jar")
-        relocate("kotlin", "io.github.cloudate9.lifesteal.dependencies")
+        relocate("dev.triumphteam.gui", "$group.dependencies.gui")
+        relocate("kotlin", "$group.dependencies.kotlin")
     }
 }
 
@@ -42,9 +45,14 @@ spigot {
     depends("CombatLogX")
 
     commands {
-        create("withdraw") {
-            description = "Withdraw hearts."
-            usage = "/withdraw <number of hearts>"
+        create("hearts") {
+            description = "Set, add, or remove hearts."
+            usage = "/hearts add/remove/set <number of hearts>"
+        }
+
+        create("lootbox") {
+            description = "Do the server lootbox thing"
+            usage = "/lootbox create/status"
         }
 
         create("revive") {
@@ -52,15 +60,25 @@ spigot {
             usage = "/revive <player>"
         }
 
-        create("restore") {
-            description = "Restore back to 10 hearts"
-            usage = "/restore <name of player>"
+        create("withdraw") {
+            description = "Withdraw hearts."
+            usage = "/withdraw <number of hearts>"
         }
     }
 
     permissions {
         create("lifesteal.admin") {
             description = "Gives admin permission for lifesteal."
+            defaults = "op"
+        }
+
+        create("lifesteal.lootbox.new") {
+            description = "Gives permission to create a new loot box."
+            defaults = "op"
+        }
+
+        create("lifesteal.lootbox.status") {
+            description = "Gives permission to view the cords of a loot box."
             defaults = "op"
         }
 
