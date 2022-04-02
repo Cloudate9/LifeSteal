@@ -11,8 +11,8 @@ class NoSpawnPVP(private val miniMessage: MiniMessage) : Listener {
     @EventHandler
     fun pvp(e: EntityDamageByEntityEvent) {
         if (e.entity !is Player || e.damager !is Player) return
-        if ((e.entity.location.x < 25.0 && e.entity.location.x > -25.0) ||
-            (e.entity.location.z > 25.0 && e.entity.location.z < -25.0)
+        if ((e.entity.location.x < 75.0 && e.entity.location.x > -75.0) ||
+            (e.entity.location.z > 75.0 && e.entity.location.z < -75.0)
         ) {
             e.isCancelled = true
             val message = miniMessage.deserialize("<red>No fighting at spawn!</red>")
