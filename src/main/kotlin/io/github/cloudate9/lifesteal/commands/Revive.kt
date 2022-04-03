@@ -14,6 +14,9 @@ import org.bukkit.util.StringUtil
 class Revive(private val lifeSteal: LifeSteal, private val miniMessage: MiniMessage) : CommandExecutor, TabCompleter {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+
+        lifeSteal.reloadConfig()
+
         if (sender !is Player) {
 
             sender.sendMessage(

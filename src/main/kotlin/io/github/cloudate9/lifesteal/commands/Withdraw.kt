@@ -15,6 +15,8 @@ import org.bukkit.util.StringUtil
 class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMessage) : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<out String>): Boolean {
 
+        lifeSteal.reloadConfig()
+
         if (sender !is Player) {
 
             sender.sendMessage(
