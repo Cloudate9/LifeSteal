@@ -15,6 +15,7 @@ class ClickHeart(private val lifeSteal: LifeSteal, private val miniMessage: Mini
         if (e.action != Action.RIGHT_CLICK_AIR && e.action != Action.RIGHT_CLICK_BLOCK) return
 
         if (!(e.item?.isSimilar(lifeSteal.heartItemModel) ?: return)) return
+        e.isCancelled = true
 
         val dupers = lifeSteal.config.getConfigurationSection("dupers")?.getKeys(false) ?: listOf<String>()
         if (dupers.contains(e.player.uniqueId.toString())) {
