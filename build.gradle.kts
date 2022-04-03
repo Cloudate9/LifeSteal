@@ -10,14 +10,12 @@ group = "io.github.cloudate9.lifesteal"
 version = "1.4.0"
 
 repositories {
-    maven("https://nexus.sirblobman.xyz/repository/public/")
     maven("https://repo.mattstudios.me/artifactory/public/")
     mavenCentral()
     papermc()
 }
 
 dependencies {
-    compileOnly("com.github.sirblobman.combatlogx:api:11.0.0.0-SNAPSHOT")
     implementation("dev.triumphteam:triumph-gui:3.1.2")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
 }
@@ -31,6 +29,23 @@ tasks {
         options.release.set(17)
     }
 
+    prepareSpigotPlugins {
+        setDependsOn(mutableListOf(shadowJar.get()))
+    }
+
+    runSpigot {
+        jvmArgs = mutableListOf(
+            "-Xmx2G",
+            "-Xms2G",
+            "-XX:+UseZGC",
+            "-XX:+ZUncommit",
+            "-XX:ZUncommitDelay=3600",
+            "-XX:+ZProactive",
+            "-XX:+AlwaysPreTouch",
+            "-XX:+DisableExplicitGC",
+        )
+    }
+
     shadowJar {
         archiveFileName.set(rootProject.name + "-" + rootProject.version + ".jar")
         relocate("dev.triumphteam.gui", "$group.dependencies.gui")
@@ -42,7 +57,6 @@ spigot {
     authors = listOf("Cloudate9")
     apiVersion = "1.18"
     description = "A personal version of LifeSteal SMP"
-    depends("CombatLogX")
 
     commands {
         create("hearts") {
@@ -52,7 +66,7 @@ spigot {
 
         create("lootbox") {
             description = "Do the server lootbox thing"
-            usage = "/lootbox create/status"
+            usage = "/lootbox new/status"
         }
 
         create("revive") {
@@ -79,7 +93,7 @@ spigot {
 
         create("lifesteal.lootbox.status") {
             description = "Gives permission to view the cords of a loot box."
-            defaults = "op"
+            defaults = "true"
         }
 
         create("lifesteal.revive") {
