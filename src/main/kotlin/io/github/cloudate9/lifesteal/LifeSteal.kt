@@ -2,9 +2,11 @@ package io.github.cloudate9.lifesteal
 
 import dev.triumphteam.gui.builder.item.ItemBuilder
 import io.github.cloudate9.lifesteal.commands.Hearts
+import io.github.cloudate9.lifesteal.commands.LootBox
 import io.github.cloudate9.lifesteal.commands.Revive
 import io.github.cloudate9.lifesteal.commands.Withdraw
 import io.github.cloudate9.lifesteal.listeners.*
+import io.github.cloudate9.lifesteal.lootbox.LootBoxManager
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -15,6 +17,7 @@ import java.net.InetSocketAddress
 
 class LifeSteal : JavaPlugin() {
 
+    private lateinit var lootBoxManager: LootBoxManager
     private val miniMessage = MiniMessage.miniMessage()
 
     val heartFragmentModel =
@@ -46,17 +49,25 @@ class LifeSteal : JavaPlugin() {
 
         saveDefaultConfig()
 
+        lootBoxManager = LootBoxManager(this)
         val pluginManager = Bukkit.getPluginManager()
+
         pluginManager.registerEvents(CheckBan(this), this)
-        pluginManager.registerEvents(ClickHeart(), this)
-        pluginManager.registerEvents(KilledByPlayer(this), this)
+        pluginManager.registerEvents(ClickHeart(this, miniMessage), this)
+        pluginManager.registerEvents(DeductHearts(this, miniMessage), this)
+        pluginManager.registerEvents(DupePunisher(this, miniMessage), this)
         pluginManager.registerEvents(NoSpawnPVP(miniMessage), this)
         pluginManager.registerEvents(TabEdit(miniMessage), this)
         pluginManager.registerEvents(UnlockRecipe(), this)
 
         getCommand("hearts")?.setExecutor(Hearts(miniMessage))
+        getCommand("lootbox")?.setExecutor(LootBox(lootBoxManager, miniMessage))
         getCommand("revive")?.setExecutor(Revive(this, miniMessage))
         getCommand("withdraw")?.setExecutor(Withdraw(this, miniMessage))
+    }
+
+    override fun onDisable() {
+        lootBoxManager.save()
     }
 
     private fun heartFragment() {
