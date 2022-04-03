@@ -7,10 +7,12 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import org.bukkit.util.StringUtil
 
 
-class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMessage) : CommandExecutor {
+class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMessage) : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<out String>): Boolean {
 
         if (sender !is Player) {
@@ -25,7 +27,7 @@ class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMe
         if (sender.hasPermission("lifesteal.withdraw")) {
 
             val heartsToWithdraw = if (args.isEmpty()) 1 else if (args[0].toInt() < 1) 1 else args[0].toInt()
-            if (sender.health <= heartsToWithdraw) {
+            if (sender.health < 2 || sender.health <= (heartsToWithdraw * 2)) {
 
                 // -2 cause ensure player always has 1 heart. heartsToWithdraw * 2 because we check health points, not hearts.
                 sender.sendMessage(
@@ -38,7 +40,7 @@ class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMe
             var emptySlots = 0
             for (itemStack in sender.inventory.contents!!) {
                 if (itemStack == null || itemStack.type == Material.AIR) {
-                    emptySlots++
+                    emptySlots += lifeSteal.heartItemModel.maxStackSize
                 }
             }
 
@@ -49,7 +51,8 @@ class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMe
                 return true
             }
 
-            sender.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue -= heartsToWithdraw
+            sender.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue -= heartsToWithdraw * 2
+            sender.health -= heartsToWithdraw * 2
             for (number in 1..heartsToWithdraw) sender.inventory.addItem(lifeSteal.heartItemModel)
 
 
@@ -65,5 +68,15 @@ class Withdraw(private val lifeSteal: LifeSteal, private val miniMessage: MiniMe
 
         return true
 
+    }
+
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): MutableList<String> {
+        if (args.size == 1) return StringUtil.copyPartialMatches(args[0], mutableListOf("<Number of hearts>"), mutableListOf())
+        return mutableListOf()
     }
 }
