@@ -64,6 +64,17 @@ class LifeSteal : JavaPlugin() {
         getCommand("lootbox")?.setExecutor(LootBox(lootBoxManager, miniMessage))
         getCommand("revive")?.setExecutor(Revive(this, miniMessage))
         getCommand("withdraw")?.setExecutor(Withdraw(this, miniMessage))
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, {
+            Bukkit.getOnlinePlayers().forEach {
+                it.playerListName(
+                    miniMessage.deserialize(
+                        "<red>" + it.health.toInt() +
+                                "❤  </red>" + it.displayName()
+                    )
+                )
+            }
+        }, 0, 5 * 20)
     }
 
     override fun onDisable() {

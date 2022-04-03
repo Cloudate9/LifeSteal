@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.cloudate9.lifesteal"
-version = "1.4.1"
+version = "1.4.2"
 
 repositories {
     maven("https://repo.mattstudios.me/artifactory/public/")
