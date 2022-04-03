@@ -6,13 +6,17 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Chest
-import org.bukkit.enchantments.Enchantment
 import kotlin.random.Random
 
 class LootBoxManager(private val lifeSteal: LifeSteal) {
 
     var lootBox: Chest? = null
     var lootBoxLoc: Location? = lifeSteal.config.getLocation("lootbox.location")
+
+    init {
+        lootBox = lootBoxLoc?.block?.state as Chest
+
+    }
 
     /**
      * Generates a random location for the loot box
@@ -41,12 +45,6 @@ class LootBoxManager(private val lifeSteal: LifeSteal) {
 
 
         lootBox!!.inventory.clear()
-
-        lootBox!!.inventory.setItem(
-            Random.nextInt(27), ItemBuilder.from(Material.ENCHANTED_BOOK)
-                .enchant(Enchantment.values().random())
-                .build()
-        )
 
         when (Random.nextInt(3)) {
             0 -> lootBox!!.inventory.setItem(Random.nextInt(27), lifeSteal.heartFragmentModel)
