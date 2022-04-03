@@ -55,7 +55,7 @@ class LifeSteal : JavaPlugin() {
         pluginManager.registerEvents(CheckBan(this), this)
         pluginManager.registerEvents(ClickHeart(this, miniMessage), this)
         pluginManager.registerEvents(DeductHearts(this, miniMessage), this)
-        pluginManager.registerEvents(DisableElytra(this), this)
+        pluginManager.registerEvents(DisableElytra(this, miniMessage), this)
         pluginManager.registerEvents(DupePunisher(this, miniMessage), this)
         pluginManager.registerEvents(NoSpawnPVP(miniMessage), this)
         pluginManager.registerEvents(TabEdit(miniMessage), this)
@@ -71,7 +71,7 @@ class LifeSteal : JavaPlugin() {
                 it.playerListName(
                     miniMessage.deserialize(
                         "<red>" + it.health.toInt() +
-                                "❤  </red>" + it.displayName()
+                                "❤  </red>" + it.name
                     )
                 )
             }
