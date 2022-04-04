@@ -7,7 +7,6 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
-import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 
 class LootBox(private val lootBoxManager: LootBoxManager, private val miniMessage: MiniMessage) : CommandExecutor,
@@ -19,6 +18,7 @@ class LootBox(private val lootBoxManager: LootBoxManager, private val miniMessag
             sender.sendMessage(
                 miniMessage.deserialize("<red>Incorrect usage: command is /lootbox new/status </red>")
             )
+            return true
         }
 
         when (args[0].lowercase()) {
