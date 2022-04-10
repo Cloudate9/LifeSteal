@@ -10,7 +10,8 @@ class CheckIllegalHearts(private val lifeSteal: LifeSteal): Listener {
     @EventHandler
     fun inventoryOpen(e: InventoryOpenEvent) {
         for (item in e.inventory) {
-            when (item?.itemMeta?.customModelData ?: return) {
+            if (!(item?.itemMeta?.hasCustomModelData() ?: return)) return
+            when (item.itemMeta?.customModelData ?: return) {
                 25001 -> {
                     if (!item.isSimilar(lifeSteal.heartFragmentModel)) {
                         item.amount = 0
