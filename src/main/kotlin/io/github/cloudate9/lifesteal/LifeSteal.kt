@@ -53,6 +53,7 @@ class LifeSteal : JavaPlugin() {
         val pluginManager = Bukkit.getPluginManager()
 
         pluginManager.registerEvents(CheckBan(this), this)
+        pluginManager.registerEvents(CheckIllegalHearts(this), this)
         pluginManager.registerEvents(ClickHeart(this, miniMessage), this)
         pluginManager.registerEvents(DeductHearts(this, miniMessage), this)
         pluginManager.registerEvents(DisableElytra(this, miniMessage), this)
