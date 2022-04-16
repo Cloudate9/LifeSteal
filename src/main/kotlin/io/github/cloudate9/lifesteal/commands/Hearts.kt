@@ -27,6 +27,13 @@ class Hearts(private val miniMessage: MiniMessage) : CommandExecutor, TabComplet
             return true
         }
 
+        if (args.isEmpty()) {
+            sender.sendMessage(
+                miniMessage.deserialize("<red>Incorrect usage: command is /hearts add/sub/set <player> <health points></red>")
+            )
+            return true
+        }
+
         val playerToModify = Bukkit.getPlayer(args[1])
         if (playerToModify == null) {
             sender.sendMessage(
@@ -60,7 +67,7 @@ class Hearts(private val miniMessage: MiniMessage) : CommandExecutor, TabComplet
             }
 
             "sub" -> {
-                val amount = args[2].toInt()
+                val amount = if (args[2].toInt() < 1) 1 else args[2].toInt()
                 val origHealth = playerToModify.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue
                 if (amount >= origHealth) {
                     sender.sendMessage(
@@ -71,6 +78,7 @@ class Hearts(private val miniMessage: MiniMessage) : CommandExecutor, TabComplet
                     )
                     return true
                 }
+                playerToModify.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue -= amount
                 playerToModify.sendMessage(
                     miniMessage.deserialize("<green>Your max health has decreased by ${amount / 2} hearts!</green>")
                 )
